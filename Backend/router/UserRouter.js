@@ -9,6 +9,7 @@ const {
   logoutAdmin,
   logoutPatient,
   addNewDoctor,
+  getuserbyid
 } = require("../Controllers/UserController");
 const {
   isAdminAuthenticated,
@@ -25,5 +26,5 @@ router.get("/patient/me", isPatientAuthenticated, getUserDetails);
 router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
 router.get("/patient/logout", isPatientAuthenticated, logoutPatient);
 router.post("/doctor/addnew", singleUpload, isAdminAuthenticated, addNewDoctor);
-
+router.get("/getdetail/:id",getuserbyid);
 module.exports = router;

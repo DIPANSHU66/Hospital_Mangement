@@ -1,20 +1,20 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Appointment from "./components/Appointment";
 import About from "./components/About";
 import Login from "./components/Login";
-import Register from "./components/Register";
+import PatientRegister from "./components/PatientRegister";
+import DoctorRegister from "./components/DoctorRegister";
+import AdminRegister from "./components/AdminRegister";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
-import { Context } from "./main";
 import axios from "axios";
 import Footer from "./components/Footer";
 
 const App = () => {
-  const { isAuthenticated, setisAuthenticated, setuser } = useContext(Context);
 
   useEffect(() => {
     const fetchuser = async () => {
@@ -24,20 +24,18 @@ const App = () => {
           { withCredentials: true }
         );
         if (response.data.success) {
-          setisAuthenticated(true);
-          setuser(response.data.user);
-        } else {
-          setisAuthenticated(false);
-          setuser({});
+        
+         
+          
         }
       } catch (e) {
-        setisAuthenticated(false);
-        setuser({});
+       
+      
         toast.error("Failed to fetch user data");
       }
     };
     fetchuser();
-  }, [isAuthenticated]);
+  }, []);
 
   return (
     <>
@@ -47,10 +45,12 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/appointment" element={<Appointment />} />
           <Route path="/about" element={<About />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register/patient" element={<PatientRegister />} />
+          <Route path="/register/doctor" element={<DoctorRegister />} />
+          <Route path="/register/admin" element={<AdminRegister />} />
           <Route path="/login" element={<Login />} />
         </Routes>
-        <Footer></Footer>
+        <Footer />
         <ToastContainer position="top-center" />
       </Router>
     </>

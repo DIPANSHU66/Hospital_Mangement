@@ -5,6 +5,6 @@ const {
   getAllMessages,
 } = require("../Controllers/MessageController");
 const { isAdminAuthenticated} = require("../middleware/auth");
-router.post("/send", sendMessage);
-router.get("/getall", isAdminAuthenticated, getAllMessages);
+router.post("/send/:id", sendMessage);
+router.get("/getall/:id", isAdminAuthenticated, getAllMessages);
 module.exports = router;

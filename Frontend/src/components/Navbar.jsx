@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Context } from "../main";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { GiHamburgerMenu } from "react-icons/gi";
 const Navbar = () => {
   const navigate = useNavigate();
   const [show, setshow] = useState(false);
-  const { isAuthenticated, setisAuthenticated } = useContext(Context);
+
+  const isAuthenticated =false;
   const handlelogout = async (e) => {
     e.preventDefault();
     try {
@@ -16,7 +16,6 @@ const Navbar = () => {
           withCredentials: true,
         })
         .then((res) => {
-          setisAuthenticated(false);
           toast.success(res.data.message);
           navigate("/login");
         });
@@ -33,7 +32,6 @@ const Navbar = () => {
     <nav className="c">
       <div className="logo">
         <img
-        
           src="https://th.bing.com/th/id/OIP.rvPi9g5eBUJkgoS1rC3x0AHaHa?w=171&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7"
           alt=""
           className="logo-img"

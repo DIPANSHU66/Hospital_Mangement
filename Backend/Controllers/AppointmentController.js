@@ -1,7 +1,7 @@
-const Appointment= require("../models/appontementSchema");
+const Appointment = require("../models/appontementSchema");
 const User = require("../models/UserSchema");
 
-const postAppointment = async (req, res, next) => {
+const postAppointment = async (req, res) => {
   try {
     const {
       firstname,
@@ -15,7 +15,7 @@ const postAppointment = async (req, res, next) => {
       department,
       doctor_firstname,
       doctor_lastname,
-      hasVisited = false, // Set default value
+      hasVisited = false,
       address,
     } = req.body;
 
@@ -94,9 +94,12 @@ const postAppointment = async (req, res, next) => {
   }
 };
 
-const getAllAppointments = async (req, res, next) => {
+const getDoctorAppointments = async (req, res) => {
+  const doctorId = req.params.doctorId;
+
   try {
-    const appointments = await Appointment.find();
+    const appointments = await Appointment.find({ doctor_id: doctorId });
+
     res.status(200).json({
       success: true,
       appointments,
@@ -110,7 +113,7 @@ const getAllAppointments = async (req, res, next) => {
   }
 };
 
-const updateAppointmentStatus = async (req, res, next) => {
+const updateAppointmentStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const appointment = await Appointment.findById(id);
@@ -121,10 +124,14 @@ const updateAppointmentStatus = async (req, res, next) => {
         .json({ message: "Appointment not found", success: false });
     }
 
-    const updatedAppointment = await Appointment.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedAppointment = await Appointment.findByIdAndUpdate(
+      id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     res.status(200).json({
       success: true,
@@ -168,7 +175,7 @@ const deleteAppointment = async (req, res, next) => {
 
 module.exports = {
   postAppointment,
-  getAllAppointments,
+  getDoctorAppointments,
   updateAppointmentStatus,
   deleteAppointment,
 };
