@@ -29,7 +29,7 @@ const register = async (req, res) => {
       !password ||
       !role
     ) {
-      return res
+      res
         .status(400)
         .json({ success: false, message: "Please fill out the full form" });
     }
@@ -55,11 +55,11 @@ const register = async (req, res) => {
       role,
     });
 
-    res
+    return res
       .status(201)
       .json({ success: true, message: "User registered successfully", user });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
       error: error.message,
@@ -102,19 +102,7 @@ const login = async (req, res) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: "7d" }
     );
-
-    res
-      .status(200)
-      .cookie(`${role}token`, token, {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: "strict",
-      })
-      .json({
-        success: true,
-        message: `Welcome Back ${user.firstname} ${user.lastname}`,
-        user,
-      });
+    return;
   } catch (error) {
     res.status(500).json({
       success: false,
