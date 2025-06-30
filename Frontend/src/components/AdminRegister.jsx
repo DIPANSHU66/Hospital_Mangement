@@ -23,7 +23,7 @@ const AdminRegister = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/admin/addnew",
+        "https://hospital-mangement-9amd.onrender.com/api/v1/user/admin/addnew",
         form,
         {
           withCredentials: true,

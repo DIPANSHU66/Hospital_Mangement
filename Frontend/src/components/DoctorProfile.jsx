@@ -21,7 +21,7 @@ const DoctorProfile = () => {
     const fetchAppointments = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/api/v1/appointment/appointmentget",
+          "https://hospital-mangement-9amd.onrender.com/api/v1/appointment/appointmentget",
           { withCredentials: true }
         );
         setAppointments(res.data.appointments || []);

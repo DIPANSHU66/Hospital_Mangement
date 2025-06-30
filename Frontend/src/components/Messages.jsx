@@ -13,7 +13,7 @@ const Messages = () => {
   const fetchMessages = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/v1/message/getall",
+        "https://hospital-mangement-9amd.onrender.com/api/v1/message/getall",
         {
           withCredentials: true,
         }
@@ -25,7 +25,7 @@ const Messages = () => {
         messageList.map(async (msg) => {
           try {
             const userRes = await axios.get(
-              `http://localhost:8000/api/v1/user/getdetail/${msg.sender}`,
+              `https://hospital-mangement-9amd.onrender.com/api/v1/user/getdetail/${msg.sender}`,
               { withCredentials: true }
             );
 
@@ -53,7 +53,7 @@ const Messages = () => {
 
   const handleDelete = async (messageId) => {
     try {
-      await axios.delete("http://localhost:8000/api/v1/message/deletemessage", {
+      await axios.delete("https://hospital-mangement-9amd.onrender.com/api/v1/message/deletemessage", {
         data: { id: messageId },
         withCredentials: true,
       });

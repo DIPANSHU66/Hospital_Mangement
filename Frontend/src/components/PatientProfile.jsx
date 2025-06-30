@@ -20,7 +20,7 @@ const PatientProfile = () => {
   const fetchAppointments = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8000/api/v1/appointment/appointmentget",
+        "https://hospital-mangement-9amd.onrender.com/api/v1/appointment/appointmentget",
         { withCredentials: true }
       );
       setAppointments(res.data.appointments);
@@ -36,7 +36,7 @@ const PatientProfile = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:8000/api/v1/appointment/delete/${id}`,
+        `https://hospital-mangement-9amd.onrender.com/api/v1/appointment/delete/${id}`,
         { withCredentials: true }
       );
       toast.success("Appointment deleted");

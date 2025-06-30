@@ -95,7 +95,7 @@ const DoctorRegister = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/doctor/addnew",
+        "https://hospital-mangement-9amd.onrender.com/api/v1/user/doctor/addnew",
         formData,
         {
           withCredentials: true,

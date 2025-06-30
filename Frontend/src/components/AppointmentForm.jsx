@@ -44,7 +44,7 @@ const AppointmentForm = () => {
     const fetchDoctors = async () => {
       try {
         const { data } = await axios.get(
-          "http://localhost:8000/api/v1/user/doctors",
+          "https://hospital-mangement-9amd.onrender.com/api/v1/user/doctors",
           { withCredentials: true }
         );
         dispatch(setAllDoctors(data.doctors || []));
@@ -64,7 +64,7 @@ const AppointmentForm = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/appointment/post",
+        "https://hospital-mangement-9amd.onrender.com/api/v1/appointment/post",
         form,
         {
           withCredentials: true,

@@ -23,7 +23,7 @@ const MessageDetail = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8000/api/v1/message/send/${id}`,
+        `https://hospital-mangement-9amd.onrender.com/api/v1/message/send/${id}`,
         { ...form },
         {
           withCredentials: true,

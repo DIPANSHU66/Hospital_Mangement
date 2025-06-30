@@ -15,7 +15,7 @@ const MessageForm = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/message/send",
+        "https://hospital-mangement-9amd.onrender.com/api/v1/message/send",
         form,
         {
           withCredentials: true,

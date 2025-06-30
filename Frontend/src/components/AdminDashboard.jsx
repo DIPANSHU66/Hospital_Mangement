@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/user/doctors");
+        const res = await axios.get("https://hospital-mangement-9amd.onrender.com/api/v1/user/doctors");
         setDoctors(res.data.doctors);
       } catch (err) {
         console.error("Error fetching doctors:", err);
