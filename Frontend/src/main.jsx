@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import "./index.css";
 
 import { Provider } from "react-redux";
-import store, { persistor } from "./redux/store"; // Import persistor
+import store, { persistor } from "./redux/store.js"; // Import persistor
 import { PersistGate } from "redux-persist/integration/react";
 
 const AppWrapper = () => (

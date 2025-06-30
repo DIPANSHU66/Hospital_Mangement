@@ -1,10 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { dbconnection } = require("../Backend/database/dbConnection");
-const messagerouter = require("../Backend/router/MessageRouter");
-const userRouter = require("../Backend/router/UserRouter");
-const appointmentrouter = require("../Backend/router/AppointmentRouter");
+const { dbconnection } = require("./database/dbConnection");
+const messagerouter = require("./router/MessageRouter");
+const userRouter = require("./router/UserRouter");
+const appointmentrouter = require("./router/AppointmentRouter");
 const path = require("path");
 
 require("dotenv").config();
