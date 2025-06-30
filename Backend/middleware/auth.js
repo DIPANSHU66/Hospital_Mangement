@@ -1,64 +1,46 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserSchema");
-require("dotenv").config();
 
-const isAdminAuthenticated = async (req, res, next) => {
-  const token = req.cookies.Admintoken;
+const isAuthenticated = (...allowedRoles) => {
+  return async (req, res, next) => {
+    try {
+      const token = req.cookies?.token;
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Admin Not Authenticated", success: false });
-  }
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          message: "Authentication token missing. Please login.",
+        });
+      }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const user = await User.findById(decoded.id);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = await User.findById(decoded.id);
 
-    if (!user || user.role !== "Admin") {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized access", success: false });
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "User not found. Please login again.",
+        });
+      }
+
+      if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+        return res.status(403).json({
+          success: false,
+          message: `Access denied for role: ${user.role}`,
+        });
+      }
+
+      req.user = user;
+      next();
+    } catch (error) {
+      console.error("isAuthenticated Error:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Authentication failed",
+        error: error.message,
+      });
     }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal Server Error",
-      success: false,
-      error: error.message,
-    });
-  }
+  };
 };
 
-const isPatientAuthenticated = async (req, res,next) => {
-  const token = req.cookies.Patienttoken;
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Patient Not Authenticated", success: false });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const user = await User.findById(decoded.id);
-
-    if (!user || user.role !== "Patient") {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized access", success: false });
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal Server Error",
-      success: false,
-      error: error.message,
-    });
-  }
-};
-
-module.exports = { isAdminAuthenticated, isPatientAuthenticated };
+module.exports = { isAuthenticated };

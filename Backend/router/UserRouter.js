@@ -1,30 +1,33 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   register,
   login,
   addNewAdmin,
   getAllDoctors,
   getUserDetails,
-  logoutAdmin,
-  logoutPatient,
+  logout,
   addNewDoctor,
-  getuserbyid
+  getuserbyid,
 } = require("../Controllers/UserController");
-const {
-  isAdminAuthenticated,
-  isPatientAuthenticated,
-} = require("../middleware/auth");
 
+const { isAuthenticated } = require("../middleware/auth");
 const { singleUpload } = require("../middleware/multer");
+
+// Public Routes
 router.post("/register", register);
 router.post("/login", login);
-router.post("/admin/addnew", addNewAdmin);
 router.get("/doctors", getAllDoctors);
-router.get("/admin/me", isAdminAuthenticated, getUserDetails);
-router.get("/patient/me", isPatientAuthenticated, getUserDetails);
-router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);
-router.get("/patient/logout", isPatientAuthenticated, logoutPatient);
-router.post("/doctor/addnew", singleUpload, isAdminAuthenticated, addNewDoctor);
-router.get("/getdetail/:id",getuserbyid);
+router.get("/getdetail/:id", getuserbyid);
+
+
+router.post("/admin/addnew",addNewAdmin);
+router.post("/doctor/addnew", singleUpload, isAuthenticated("Admin"), addNewDoctor);
+
+router.get("/me", isAuthenticated(), getUserDetails);
+
+
+router.get("/logout", isAuthenticated(), logout);
 module.exports = router;
+

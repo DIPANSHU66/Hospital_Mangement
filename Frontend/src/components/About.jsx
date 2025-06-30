@@ -5,6 +5,7 @@ import Biography from "./Biography";
 const About = () => {
   return (
     <div className="min-h-screen bg-white text-gray-800">
+      
       <Hero
         title="Learn More About Us | Dipanshu Medical Institute"
         imageUrl="https://static.vecteezy.com/system/resources/previews/004/335/589/original/hospital-building-for-healthcare-background-illustration-with-ambulance-car-doctor-patient-nurses-and-medical-clinic-exterior-vector.jpg"

@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const getdataUri = require("../utils/datauri");
 const cloudinary = require("../utils/cloudinary");
+require("dotenv").config();
+
 
 const register = async (req, res) => {
   try {
@@ -16,6 +18,8 @@ const register = async (req, res) => {
       gender,
       password,
       role,
+      docAvatar,
+      doctorDepartment,
     } = req.body;
 
     if (
@@ -29,15 +33,16 @@ const register = async (req, res) => {
       !password ||
       !role
     ) {
-      res
-        .status(400)
-        .json({ success: false, message: "Please fill out the full form" });
+      return res.status(400).json({
+        success: false,
+        message: "Please fill out the full form",
+      });
     }
 
     if (await User.findOne({ email })) {
       return res.status(400).json({
         success: false,
-        message: "User with this Email already exists",
+        message: "User with this email already exists",
       });
     }
 
@@ -53,11 +58,21 @@ const register = async (req, res) => {
       gender,
       password: hashedPassword,
       role,
+      docAvatar,
+      doctorDepartment,
     });
 
-    return res
-      .status(201)
-      .json({ success: true, message: "User registered successfully", user });
+    return res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      user: {
+        id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -67,55 +82,83 @@ const register = async (req, res) => {
   }
 };
 
+
 const login = async (req, res) => {
   try {
-    const { email, password, confirmpassword, role } = req.body;
+    const { email, password, role } = req.body;
 
-    if (!email || !password || !confirmpassword || !role) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid credentials" });
-    }
-
-    if (password !== confirmpassword) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Passwords do not match" });
+    if (!email || !password || !role) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide email, password, and role",
+      });
     }
 
     const user = await User.findOne({ email }).select("+password");
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid email or password" });
+    // Check if email exists
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Email not registered. Please register first.",
+      });
     }
 
-    if (role !== user.role) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User with this role is not found" });
+  
+    if (user.role !== role) {
+      return res.status(403).json({
+        success: false,
+        message: `No ${role} account found with this email`,
+      });
     }
+
+   
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid password",
+      });
+    }
+
+    const finduser = await User.findById(user._id).select("-password");
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "7d" }
     );
-    return;
+
+   
+    res
+      .status(200)
+      .cookie("token", token, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        sameSite: "Lax",
+        secure: process.env.NODE_ENV === "production",
+      })
+      .json({
+        success: true,
+        message: "Login successful",
+        user: finduser,
+      });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({
       success: false,
-      message: "Internal Server Error",
+      message: "Something went wrong during login",
       error: error.message,
     });
   }
 };
 
+
 const addNewAdmin = async (req, res) => {
   req.body.role = "Admin";
   return register(req, res);
 };
+
 
 const addNewDoctor = async (req, res) => {
   try {
@@ -148,9 +191,10 @@ const addNewDoctor = async (req, res) => {
   }
 };
 
+
 const getAllDoctors = async (req, res) => {
   try {
-    const doctors = await User.find({ role: "Doctor" });
+    const doctors = await User.find({ role: "Doctor" }).select("-password");
     res.status(200).json({ success: true, doctors });
   } catch (error) {
     res.status(500).json({
@@ -161,30 +205,50 @@ const getAllDoctors = async (req, res) => {
   }
 };
 
+
 const getUserDetails = async (req, res) => {
   res.status(200).json({ success: true, user: req.user });
 };
 
-const logout = (role) => (req, res) => {
+
+const logout = (req, res) => {
   res
     .status(200)
-    .cookie(`${role}token`, "", { httpOnly: true, expires: new Date(0) })
+    .cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      sameSite: "Lax",
+      secure: process.env.NODE_ENV === "production",
+    })
     .json({ success: true, message: "Logout successful" });
 };
 
+
 const getuserbyid = async (req, res) => {
-  const user = await User.findById(req.params.id).select("-password");
-  res.status(200).json({ success: true, user: user });
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
 };
 
 module.exports = {
   register,
   login,
   addNewAdmin,
+  addNewDoctor,
   getAllDoctors,
   getUserDetails,
-  logoutAdmin: logout("Admin"),
-  logoutPatient: logout("Patient"),
-  addNewDoctor,
   getuserbyid,
+  logout,
 };

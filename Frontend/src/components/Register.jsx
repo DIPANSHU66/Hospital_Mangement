@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { SetUser } from "../redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const Register = () => {
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -20,7 +23,6 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
- 
 
     try {
       const res = await axios.post(
@@ -34,6 +36,7 @@ const Register = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/");
+        dispatch(SetUser(res.data.user));
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Registration failed");
@@ -69,7 +72,9 @@ const Register = () => {
             alt="patient"
             className="w-24 h-24 rounded-full mx-auto mb-4"
           />
-          <h1 className="text-5xl font-bold text-green-700 mb-2">Welcome! 👩‍⚕️👨‍⚕️</h1>
+          <h1 className="text-5xl font-bold text-green-700 mb-2">
+            Welcome! 👩‍⚕️👨‍⚕️
+          </h1>
           <p className="text-xl text-gray-600">
             Join{" "}
             <span className="font-semibold text-red-500">
@@ -165,7 +170,9 @@ const Register = () => {
               required
               className="px-6 py-4 text-lg border border-gray-300 rounded-xl bg-white text-gray-700 focus:ring-2 focus:ring-green-500 outline-none"
             >
-              <option value="" disabled>Select Gender</option>
+              <option value="" disabled>
+                Select Gender
+              </option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
@@ -181,7 +188,8 @@ const Register = () => {
         </form>
 
         <div className="pt-12 text-center text-gray-400 text-sm border-t border-gray-300 mt-10">
-          ⓒ {new Date().getFullYear()} Dipanshu Medical Institute. All rights reserved.
+          ⓒ {new Date().getFullYear()} Dipanshu Medical Institute. All rights
+          reserved.
         </div>
       </div>
     </div>

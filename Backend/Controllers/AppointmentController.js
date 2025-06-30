@@ -95,19 +95,38 @@ const postAppointment = async (req, res) => {
 };
 
 const getDoctorAppointments = async (req, res) => {
-  const doctorId = req.params.doctorId;
-
   try {
-    const appointments = await Appointment.find({ doctor_id: doctorId });
+    const userId = req.user?._id;
+    const role = req.user?.role;
 
-    res.status(200).json({
+    if (!userId || !role) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: Missing user information",
+      });
+    }
+
+    let appointments = [];
+
+    if (role === "Doctor") {
+      appointments = await Appointment.find({ doctor_id: userId });
+    } else if (role === "Patient") {
+      appointments = await Appointment.find({ patientId: userId });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: Invalid user role",
+      });
+    }
+
+    return res.status(200).json({
       success: true,
       appointments,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Internal Server Error",
+    return res.status(500).json({
       success: false,
+      message: "Internal Server Error",
       error: error.message,
     });
   }
@@ -147,7 +166,7 @@ const updateAppointmentStatus = async (req, res) => {
   }
 };
 
-const deleteAppointment = async (req, res, next) => {
+const deleteAppointment = async (req, res) => {
   try {
     const { id } = req.params;
     const appointment = await Appointment.findById(id);

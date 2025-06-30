@@ -2,6 +2,9 @@ import React from "react";
 import AppointmentForm from "./AppointmentForm";
 import Hero from "./Hero";
 
+
+
+
 const Appointment = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-100">

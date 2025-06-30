@@ -49,9 +49,7 @@ const MessageForm = () => {
               type="text"
               placeholder="First Name"
               value={form.firstname}
-              onChange={(e) =>
-                setForm({ ...form, firstname: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, firstname: e.target.value })}
               className="p-4 border border-gray-300 rounded-lg text-lg w-full"
               required
             />
@@ -59,9 +57,7 @@ const MessageForm = () => {
               type="text"
               placeholder="Last Name"
               value={form.lastname}
-              onChange={(e) =>
-                setForm({ ...form, lastname: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, lastname: e.target.value })}
               className="p-4 border border-gray-300 rounded-lg text-lg w-full"
               required
             />

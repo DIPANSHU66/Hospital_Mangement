@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { SetUser } from "../redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -30,6 +33,7 @@ const Login = () => {
         }
       );
       if (res.data.success) {
+        dispatch(SetUser(res.data.user));
         toast.success(res.data.message);
         navigate("/");
         setForm({
@@ -138,7 +142,7 @@ const Login = () => {
             <Link to="/register" className="text-green-600 hover:underline">
               ➤ Patient Register
             </Link>
-          
+
             <Link to="/register/admin" className="text-red-600 hover:underline">
               ➤ Admin Register
             </Link>

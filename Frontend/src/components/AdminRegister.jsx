@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { SetUser } from "../redux/authSlice";
+import { useDispatch } from "react-redux";
 const AdminRegister = () => {
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -31,6 +33,7 @@ const AdminRegister = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/");
+        dispatch(SetUser(res.data.user));
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Registration failed");

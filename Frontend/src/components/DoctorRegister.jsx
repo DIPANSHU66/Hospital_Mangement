@@ -2,21 +2,57 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { setAllDoctors } from "../redux/doctorSlice";
+import { useDispatch } from "react-redux";
+
+import { SetUser } from "../redux/authSlice";
 
 const departmentArray = [
-  "Radiology", "Neurology", "Orthopedics", "Cardiology", "Gastroenterology",
-  "Oncology", "Pediatrics", "Dermatology", "Internal Medicine", "Surgery",
-  "Anesthesiology", "Ophthalmology", "Urology", "Pulmonology", "Endocrinology",
-  "Rheumatology", "Hematology", "Nephrology", "Psychiatry", "Emergency Medicine",
-  "Obstetrics and Gynecology", "Pathology", "Rehabilitation", "Family Medicine",
-  "Addiction Medicine", "Sports Medicine", "Infectious Diseases", "Immunology",
-  "Plastic Surgery", "Vascular Surgery", "Thoracic Surgery", "General Surgery",
-  "Transplant Surgery", "Critical Care", "Genetics", "Pain Management",
-  "Palliative Care", "Pharmacology", "Sleep Medicine", "Geriatrics",
-  "Nuclear Medicine", "Fetal Medicine", "Audiology", "Speech Pathology",
-  "Reproductive Endocrinology", "Neurocritical Care",
+  "Radiology",
+  "Neurology",
+  "Orthopedics",
+  "Cardiology",
+  "Gastroenterology",
+  "Oncology",
+  "Pediatrics",
+  "Dermatology",
+  "Internal Medicine",
+  "Surgery",
+  "Anesthesiology",
+  "Ophthalmology",
+  "Urology",
+  "Pulmonology",
+  "Endocrinology",
+  "Rheumatology",
+  "Hematology",
+  "Nephrology",
+  "Psychiatry",
+  "Emergency Medicine",
+  "Obstetrics and Gynecology",
+  "Pathology",
+  "Rehabilitation",
+  "Family Medicine",
+  "Addiction Medicine",
+  "Sports Medicine",
+  "Infectious Diseases",
+  "Immunology",
+  "Plastic Surgery",
+  "Vascular Surgery",
+  "Thoracic Surgery",
+  "General Surgery",
+  "Transplant Surgery",
+  "Critical Care",
+  "Genetics",
+  "Pain Management",
+  "Palliative Care",
+  "Pharmacology",
+  "Sleep Medicine",
+  "Geriatrics",
+  "Nuclear Medicine",
+  "Fetal Medicine",
+  "Audiology",
+  "Speech Pathology",
+  "Reproductive Endocrinology",
+  "Neurocritical Care",
 ];
 
 const DoctorRegister = () => {
@@ -35,7 +71,7 @@ const DoctorRegister = () => {
   const [avatar, setAvatar] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const allDoctors = useSelector((state) => state.doctor.allDoctors); // ✅ Check reducer camelCase
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,9 +106,7 @@ const DoctorRegister = () => {
       if (res.data.success) {
         toast.success("Doctor registered successfully");
 
-        if (res.data.doctor) {
-          dispatch(setAllDoctors([...allDoctors, res.data.doctor])); // ✅ Fixed syntax
-        }
+        dispatch(SetUser(res.data.user));
 
         navigate("/admin/dashboard");
       }
@@ -82,8 +116,8 @@ const DoctorRegister = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-100 flex items-center justify-center px-4 py-10">
-      <div className="max-w-5xl w-full bg-white p-10 rounded-3xl shadow-xl">
+    <div className="min-h-screen pt-28 bg-gradient-to-br from-blue-50 to-green-100 px-4 flex items-center justify-center">
+      <div className="w-full max-w-5xl bg-white p-10 rounded-3xl shadow-xl overflow-y-auto max-h-[90vh]">
         <h2 className="text-3xl font-bold text-center text-indigo-700 mb-10">
           Register New Doctor
         </h2>
