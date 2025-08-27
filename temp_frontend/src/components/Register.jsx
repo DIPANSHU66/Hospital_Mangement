@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { SetUser } from "../redux/authSlice";
-import { useDispatch } from "react-redux";
 
 const Register = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -19,29 +17,33 @@ const Register = () => {
     role: "Patient",
   });
 
-  const navigate = useNavigate();
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
+  // Handle registration
   const handleRegister = async (e) => {
     e.preventDefault();
-
     try {
       const res = await axios.post(
         "https://hospital-mangement-9amd.onrender.com/api/v1/user/register",
         form,
         {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }, // ✅ removed withCredentials
         }
       );
+
       if (res.data.success) {
         toast.success(res.data.message);
-        navigate("/");
-        dispatch(SetUser(res.data.user));
+        navigate("/login"); // redirect to login page
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Registration failed");
     }
 
+    // Reset form
     setForm({
       firstname: "",
       lastname: "",
@@ -53,14 +55,6 @@ const Register = () => {
       gender: "",
       role: "Patient",
     });
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
   };
 
   return (
