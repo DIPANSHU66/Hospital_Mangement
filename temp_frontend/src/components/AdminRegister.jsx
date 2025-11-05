@@ -32,7 +32,7 @@ const AdminRegister = () => {
       );
       if (res.data.success) {
         toast.success(res.data.message);
-        navigate("/");
+        navigate("/login");
         dispatch(SetUser(res.data.user));
       }
     } catch (error) {
