@@ -12,7 +12,7 @@ const Departments = () => {
   const departmentarray = [
     { name: "Pediatrics", imageUrl: "https://th.bing.com/th/id/OIP.do7dnHgk77T6mHkQHb0p1gHaGC?w=231&h=188" },
     { name: "Orthopedics", imageUrl: "https://th.bing.com/th/id/OIP.MZ6TMW8wqUzW3_hVqUMTvAHaDt?w=305&h=175" },
-    { name: "Cardiology", imageUrl: "https://th.bing.com/th/id/OIP.ANz5opDPE4kZrAoJENrH7gHaFm?w=229&h=180" },
+    { name: "Cardiology", imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=800" },
     { name: "Neurology", imageUrl: "https://th.bing.com/th/id/OIP.Ouyp8GzI0T36Y2wMqBgh6wHaE8?w=251&h=180" },
     { name: "Oncology", imageUrl: "https://th.bing.com/th/id/OIP.BvrcXwPOQeY65KUjTmEvKgHaE8?w=260&h=180" },
     { name: "ENT", imageUrl: "https://thumbayhospital.com/ajman/wp-content/uploads/sites/2/2017/05/ent.jpg" },

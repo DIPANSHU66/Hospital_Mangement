@@ -4,8 +4,10 @@ const Hero = ({ title, imageUrl }) => {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-blue-50 py-16 sm:py-24">
       {/* Decorative Blob */}
-      <div className="absolute top-0 right-0 -z-10 translate-x-1/3 -translate-y-1/3 transform opacity-30">
-        <img src="https://pa.azureedge.net/media/join-hero/blob-latest.svg" alt="" className="w-[800px] h-[800px]" />
+      <div className="absolute top-0 right-0 -z-10 translate-x-1/3 -translate-y-1/3 transform opacity-30 text-indigo-200">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-[800px] h-[800px] fill-current">
+          <path d="M47.7,-57.2C59.4,-44.6,64.8,-26.4,68.4,-7.6C72,11.2,73.8,30.5,65.2,46.1C56.6,61.7,37.5,73.6,18.5,76.5C-0.5,79.4,-19.4,73.3,-34.5,61.9C-49.6,50.5,-60.9,33.8,-66.1,15.4C-71.3,-3,-70.4,-23.1,-60.8,-38.7C-51.2,-54.3,-32.9,-65.4,-15.5,-67.5C1.9,-69.6,19.3,-62.7,33.2,-58.5L47.7,-57.2Z" transform="translate(100 100)" />
+        </svg>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
