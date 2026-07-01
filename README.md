@@ -1,131 +1,135 @@
-# Dipanshu Medical Institute - MERN Hospital Management System (HMS)
+# 🏥 Hospital Management System (HMS)
 
-An enterprise-grade, highly secure, and responsive **Hospital Management System (HMS)** built with the **MERN Stack** (MongoDB, Express.js, React, Node.js). This project showcases clean software engineering practices, Role-Based Access Control (RBAC), secure JWT/cookie-based session state, optimized database indexes, and an AI Chatbot Assistant with smart offline fallback mechanisms.
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-8E75C2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://deepmind.google/technologies/gemini/)
+
+An enterprise-grade, highly secure, and responsive Hospital Management System (HMS) built with the MERN stack. It features robust Role-Based Access Control (RBAC), secure authentication guards, query optimizations, and an integrated AI Chatbot assistant with local offline fallback models.
+
+---
+
+## 🖥️ Application Preview
+
+![Hospital Management System Preview](screenshots/mockup.png)
 
 ---
 
 ## 🌟 Core Architecture & Technical Highlights
 
-*   **Role-Based Access Control (RBAC):** Restricts interface layout and endpoint visibility between three system roles:
-    *   **Patient:** Can book appointments (auto-filled forms), check appointment status timelines, and access a support desk chat threads with Admins.
-    *   **Doctor:** Can view assigned appointments in a fluid grid, filter/search by patient, review details, change appointment statuses (Pending, Accepted, Rejected), and view metrics.
-    *   **Admin:** Full dashboard control to register new doctors, read and delete inquiries, check response status indicators (`Replied` or `Pending Reply`), and reply directly to patients.
-*   **Centralized Middleware Validation & Security:**
-    *   Centralized global error middleware handling duplicate MongoDB key entry, Mongoose validator schemas, JWT expiry, and route casting failures.
-    *   Authentication guards (`isAuthenticated`) verifying HTTP-Only cookies containing sign-validated JWT payload claims.
-*   **Database Query Optimization:**
-    *   Includes compound indexes on `AppointmentSchema.js` targeting `{ patientId: 1, appointment_date: -1 }` and `{ doctor_id: 1, appointment_date: -1 }` to optimize large queries.
-    *   Single-field index on user `email` for rapid authentication and user queries.
-*   **Generative AI Assistant:**
-    *   Powered by Google Gemini (Generative Language REST API) with structured instruction parameters.
-    *   Incorporates a local, keyword-matching fallback system to service inquiries when API keys are not supplied.
+- **👥 Role-Based Access Control (RBAC)**: Restricts interface layouts and API endpoints based on user roles:
+  - **Patient**: Request and track appointment statuses, and access personal inquiry chat threads.
+  - **Doctor**: View assigned appointments in a custom queue grid, review patient details, and manage appointment states (*Pending, Accepted, Rejected*).
+  - **Admin**: Full dashboard management to register doctors, oversee system metrics, and resolve patient inquiries.
+- **🛡️ Centralized Middleware Validation**:
+  - Global error handling for duplicate database keys, validation issues, and route casting errors.
+  - Custom authentication guards verifying signed JSON Web Tokens (JWT) inside HTTP-Only cookies.
+- **⚡ Database Performance Tuning**:
+  - Compound indexes on appointment tables: `{ patientId: 1, appointment_date: -1 }` and `{ doctor_id: 1, appointment_date: -1 }` for rapid retrieval.
+  - Unique index constraints on user emails to secure authentication paths.
+- **🤖 Integrated AI Assistant**:
+  - Patient support desk powered by Google Gemini API.
+  - Smart keyword-matching fallback system to service patients locally under API quota constraints.
 
 ---
 
 ## 📡 REST API Documentation
 
-Detailed RESTful endpoints conforming to standard HTTP verbs and response models:
-
 ### 🔑 Authentication & Profiles (`/api/v1/user`)
-| Endpoint | Method | Role | Description |
+| Endpoint | Method | Access Role | Description |
 | :--- | :--- | :--- | :--- |
 | `/register` | `POST` | Public | Register a Patient account. |
-| `/login` | `POST` | Public | Authenticated login setting HTTP-Only Cookie. |
-| `/logout` | `GET` | Authenticated | Clears cookies and destroys auth state. |
+| `/login` | `POST` | Public | Login verification setting secure HTTP-Only cookies. |
+| `/logout` | `GET` | Authenticated | Clears cookies and destroys auth session state. |
 | `/me` | `GET` | Authenticated | Retrieve current user profile state. |
-| `/doctors` | `GET` | Authenticated | Fetch list of all registered doctors. |
-| `/getdetail/:id` | `GET` | Authenticated | Retrieve user profile by MongoDB ObjectId. |
-| `/admin/addnew` | `POST` | Public | Register a new Administrator account. |
-| `/doctor/addnew` | `POST` | Admin Only | Register a doctor with avatar upload (Multer/Cloudinary). |
+| `/doctors` | `GET` | Authenticated | Fetch active doctors list. |
+| `/doctor/addnew` | `POST` | Admin Only | Register a doctor with profile image (Multer/Cloudinary). |
 
 ### 📅 Appointment Services (`/api/v1/appointment`)
-| Endpoint | Method | Role | Description |
+| Endpoint | Method | Access Role | Description |
 | :--- | :--- | :--- | :--- |
-| `/post` | `POST` | Patient Only | Books an appointment (pre-filled validator). |
+| `/post` | `POST` | Patient Only | Schedule an appointment. |
 | `/appointmentget` | `GET` | Patient/Doctor | Fetch relevant appointments. |
 | `/update/:id` | `PUT` | Doctor Only | Update appointment status. |
-| `/delete/:id` | `DELETE` | Authenticated | Remove/cancel an appointment. |
-
-### 💬 Helpdesk & Messages (`/api/v1/message`)
-| Endpoint | Method | Role | Description |
-| :--- | :--- | :--- | :--- |
-| `/send/:id?` | `POST` | Authenticated | Send message. Auto-populates data from user. |
-| `/getall` | `GET` | Authenticated | Fetch messages (Admins get incoming; Patients get their thread). |
-| `/reply/:id` | `PUT` | Admin Only | Update an inquiry with an Admin response. |
-| `/deletemessage` | `DELETE` | Admin Only | Remove message record. |
-
-### 🤖 Chatbot Services (`/api/v1/chatbot`)
-| Endpoint | Method | Role | Description |
-| :--- | :--- | :--- | :--- |
-| `/ask` | `POST` | Public | Send messages to AI chatbot. |
+| `/delete/:id` | `DELETE` | Authenticated | Cancel/remove appointment record. |
 
 ---
 
-## 📂 Codebase Structure
+## 📁 Codebase Structure
 
-```
+```text
 Hospital Manage/
 ├── backend/
-│   ├── Controllers/         # MVC Controllers for route logic
+│   ├── Controllers/         # API Controllers for route logic
 │   ├── database/            # Mongoose DB connection setup
 │   ├── middleware/          # Auth, error, and file-upload middlewares
 │   ├── models/              # Schema declarations (User, Appointment, Message)
-│   ├── router/              # Router mapping
-│   ├── utils/               # Helper utilities (Cloudinary, Data URI)
 │   └── index.js             # Express Entry file
 └── frontend/
     ├── src/
-    │   ├── components/      # UI Components (Home, Profile, Helpdesk, Form, Chat)
-    │   ├── redux/           # Global state storage (Auth, Doctor lists)
-    │   ├── App.jsx          # Route declarations
-    │   ├── main.jsx         # Vite entry
-    │   └── index.css        # Tailwind initialization
-    └── package.json         # Package configuration
+    │   ├── components/      # UI components (Home, Profile, Helpdesk, Form, Chat)
+    │   └── redux/           # Global state storage (Auth, Doctor lists)
 ```
 
 ---
 
-## ⚙️ Local Setup Guide
+## 🚀 Local Installation & Setup
 
-### 1. Prerequisites
-*   Node.js (v18+)
-*   MongoDB Instance (Atlas or Local)
-*   Cloudinary Account (for Doctor profile image assets)
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18+)
+- [MongoDB](https://www.mongodb.com/) (Local or Atlas Cloud)
+- [Cloudinary](https://cloudinary.com/) credentials (for image uploads)
 
-### 2. Backend Config
-1.  Navigate to `/backend`.
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Create a `.env` file containing:
-    ```env
-    PORT=8000
-    MONGO_URI=your_mongodb_connection_string
-    FRONTEND_URL=http://localhost:5173
-    JWT_SECRET_KEY=any_secure_signing_salt
-    CLOUD_NAME=your_cloudinary_name
-    API_KEY=your_cloudinary_api_key
-    API_SECRET=your_cloudinary_api_secret
-    GEMINI_API_KEY=your_optional_google_gemini_key (Leave empty for fallback)
-    ```
-4.  Run in dev mode:
-    ```bash
-    npm run dev
-    ```
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/DIPANSHU66/Hospital_Mangement.git
+cd Hospital_Mangement
+```
 
-### 3. Frontend Config
-1.  Navigate to `/frontend`.
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Create a `.env` file containing:
-    ```env
-    VITE_API_URL=http://localhost:8000/api/v1
-    ```
-4.  Run in dev mode:
-    ```bash
-    npm run dev
-    ```
-5.  Access the web interface at `http://localhost:5173`.
+### Step 2: Configure & Start Backend
+1. Navigate to `backend/` and install dependencies:
+   ```bash
+   cd backend
+   npm install
+   ```
+2. Create a `.env` file in the `backend/` folder:
+   ```env
+   PORT=8000
+   MONGO_URI=your_mongodb_connection_string
+   FRONTEND_URL=http://localhost:5173
+   JWT_SECRET_KEY=any_secure_signing_salt
+   CLOUD_NAME=your_cloudinary_name
+   API_KEY=your_cloudinary_api_key
+   API_SECRET=your_cloudinary_api_secret
+   GEMINI_API_KEY=your_google_gemini_api_key (optional)
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+### Step 3: Configure & Start Frontend
+1. Navigate to `frontend/` and install dependencies:
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+2. Create a `.env` file in the `frontend/` folder:
+   ```env
+   VITE_API_URL=http://localhost:8000/api/v1
+   ```
+3. Run the Vite development server:
+   ```bash
+   npm run dev
+   ```
+4. Access the portal at `http://localhost:5173`.
+
+---
+
+## 🛡️ License & Contributions
+This project is open-source. Contributions, issues, and feature requests are welcome!
+
+---
+
+*Made with ❤️ by [Dipanshu Bansal](https://github.com/DIPANSHU66)*
